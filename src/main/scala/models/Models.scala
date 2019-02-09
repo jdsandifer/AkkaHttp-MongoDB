@@ -8,26 +8,30 @@ case class FindByIdRequest(id: String) {
   require(ObjectId.isValid(id), "the informed id is not a representation of a valid hex string")
 }
 
-case class User(_id: ObjectId, username: String, age: Int) {
-  require(username != null, "username not informed")
-  require(username.nonEmpty, "username cannot be empty")
-  require(age > 0, "age cannot be lower than 1")
+case class Order(_id: ObjectId, customerName: String, drink: String, quantity: Int) {
+  require(customerName != null, "customerName not informed")
+  require(customerName.nonEmpty, "customerName cannot be empty")
+  require(drink != null, "drink not informed")
+  require(drink.nonEmpty, "drink cannot be empty")
+  require(quantity > 0, "age cannot be lower than 1")
 }
 
-object User {
-  implicit val encoder: Encoder[User] = (a: User) => {
+object Order {
+  implicit val encoder: Encoder[Order] = (a: Order) => {
     Json.obj(
       "id" -> a._id.toHexString.asJson,
-      "username" -> a.username.asJson,
-      "age" -> a.age.asJson
+      "customerName" -> a.customerName.asJson,
+      "drink" -> a.drink.asJson,
+      "quantity" -> a.quantity.asJson
     )
   }
 
-  implicit val decoder: Decoder[User] = (c: HCursor) => {
+  implicit val decoder: Decoder[Order] = (c: HCursor) => {
     for {
-      username <- c.downField("username").as[String]
-      age <- c.downField("age").as[Int]
-    } yield User(ObjectId.get(), username, age)
+      customerName <- c.downField("customerName").as[String]
+      drink <- c.downField("drink").as[String]
+      quantity <- c.downField("quantity").as[Int]
+    } yield Order(ObjectId.get(), customerName, drink, quantity)
   }
 }
 

@@ -11,8 +11,8 @@ import models._
 object Mongo {
   lazy val config = ConfigFactory.load()
   lazy val mongoClient: MongoClient = MongoClient(config.getString("mongo.uri"))
-  lazy val codecRegistry = fromRegistries(fromProviders(classOf[User]), DEFAULT_CODEC_REGISTRY)
+  lazy val codecRegistry = fromRegistries(fromProviders(classOf[Order]), DEFAULT_CODEC_REGISTRY)
   lazy val database: MongoDatabase = mongoClient.getDatabase(config.getString("mongo.database")).withCodecRegistry(codecRegistry)
 
-  lazy val userCollection: MongoCollection[User] = database.getCollection[User]("users")
+  lazy val orderCollection: MongoCollection[Order] = database.getCollection[Order]("orders")
 }

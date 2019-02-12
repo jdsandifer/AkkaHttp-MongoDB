@@ -33,6 +33,13 @@ class OrderEndpoint(repository: OrderRepository)(implicit ec: ExecutionContext, 
           case Failure(e)           =>
             complete(Marshal(Message(e.getMessage)).to[ResponseEntity].map { e => HttpResponse(entity = e, status = StatusCodes.InternalServerError) })
         }
+      } ~ (get & pathEndOrSingleSlash) {
+        onComplete(repository.all()) {
+          case Success(orders) =>
+            complete(Marshal(orders).to[ResponseEntity].map { e => HttpResponse(entity = e) })
+          case Failure(e)           =>
+            complete(Marshal(Message(e.getMessage)).to[ResponseEntity].map { e => HttpResponse(entity = e, status = StatusCodes.InternalServerError) })
+        }
       } ~ (post & pathEndOrSingleSlash & entity(as[Order])) { order =>
         onComplete(repository.save(order)) {
           case Success(id) =>

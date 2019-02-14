@@ -47,6 +47,15 @@ class OrderEndpoint(repository: OrderRepository)(implicit ec: ExecutionContext, 
           case Failure(e)  =>
             complete(Marshal(Message(e.getMessage)).to[ResponseEntity].map { e => HttpResponse(entity = e, status = StatusCodes.InternalServerError) })
         }
+      } ~ (delete & path(Segment).as(FindByIdRequest)) { request =>
+        onComplete(repository.remove(request.id)) {
+          case Success(Some(order)) =>
+            complete(Marshal(order).to[ResponseEntity].map { e => HttpResponse(entity = e) })
+          case Success(None)        =>
+            complete(HttpResponse(status = StatusCodes.NotFound))
+          case Failure(e)           =>
+            complete(Marshal(Message(e.getMessage)).to[ResponseEntity].map { e => HttpResponse(entity = e, status = StatusCodes.InternalServerError) })
+        }
       }
     }
 }

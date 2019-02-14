@@ -1,5 +1,6 @@
 package models.repository
 
+import cats.instances.order
 import org.mongodb.scala._
 import org.mongodb.scala.bson.ObjectId
 
@@ -32,4 +33,10 @@ class OrderRepository(collection: MongoCollection[Order])(implicit ec: Execution
       .insertOne(order)
       .head
       .map { _ => order._id.toHexString }
+
+  def remove(id: String): Future[Option[Order]] =
+  collection
+    .findOneAndDelete(Document("_id" -> new ObjectId(id)))
+    .head()
+    .map(Option(_))
 }

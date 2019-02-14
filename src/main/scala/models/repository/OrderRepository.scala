@@ -9,9 +9,9 @@ import models.Order
 class OrderRepository(collection: MongoCollection[Order])(implicit ec: ExecutionContext) {
   def all(): Future[Seq[Order]] =
     collection
-    .find
-    .collect
-    .head
+      .find
+      .collect
+      .head
 
   def next(): Future[Option[Order]] =
     collection

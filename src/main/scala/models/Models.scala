@@ -5,15 +5,15 @@ import io.circe.syntax._
 import org.bson.types.ObjectId
 
 case class FindByIdRequest(id: String) {
-  require(ObjectId.isValid(id), "the informed id is not a representation of a valid hex string")
+  require(ObjectId.isValid(id), "the provided id is not a representation of a valid hex string")
 }
 
 case class Order(_id: ObjectId, customerName: String, drink: String, quantity: Int) {
   require(customerName != null, "customerName not informed")
-  require(customerName.nonEmpty, "customerName cannot be empty")
+  require(customerName.nonEmpty, "customerName is required")
   require(drink != null, "drink not informed")
-  require(drink.nonEmpty, "drink cannot be empty")
-  require(quantity > 0, "age cannot be lower than 1")
+  require(drink.nonEmpty, "drink is required")
+  require(quantity > 0, "quantity cannot be less than 1")
 }
 
 object Order {

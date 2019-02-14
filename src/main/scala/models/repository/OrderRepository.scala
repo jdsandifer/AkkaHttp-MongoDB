@@ -27,7 +27,7 @@ class OrderRepository(collection: MongoCollection[Order])(implicit ec: Execution
       .head
       .map(Option(_))
 
-  def save(order: Order): Future[String] =
+  def add(order: Order): Future[String] =
     collection
       .insertOne(order)
       .head

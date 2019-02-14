@@ -41,7 +41,7 @@ class OrderEndpoint(repository: OrderRepository)(implicit ec: ExecutionContext, 
             complete(Marshal(Message(e.getMessage)).to[ResponseEntity].map { e => HttpResponse(entity = e, status = StatusCodes.InternalServerError) })
         }
       } ~ (post & pathEndOrSingleSlash & entity(as[Order])) { order =>
-        onComplete(repository.save(order)) {
+        onComplete(repository.add(order)) {
           case Success(id) =>
             complete(HttpResponse(status = StatusCodes.Created, headers = List(Location(s"/api/orders/$id"))))
           case Failure(e)  =>
